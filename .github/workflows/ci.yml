@@ -90,6 +90,12 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Install dependencies
+        working-directory: ${{ matrix.service }}
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
       - name: Run tests
         working-directory: ${{ matrix.service }}
         run: |
@@ -131,11 +137,11 @@ jobs:
     name: Build and Push ${{ matrix.image }}
     runs-on: ubuntu-latest
 
-    # All backend tests must pass before this job starts
+    # All backend and frontend tests must pass before this job starts
     needs:
       - backend-test
       - frontend-test
-      
+
     # Build and push when code is pushed to main or manually triggered
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
 
